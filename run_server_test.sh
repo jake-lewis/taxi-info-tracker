@@ -1,3 +1,3 @@
 #!/bin/sh
-cd /home/node-app-test/node-app
+cd /home/ubuntu/node-app-test/node-app
 mocha
