@@ -1,6 +1,6 @@
 {
   "name": "node-app",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,9 @@
     "express": "^4.15.5",
     "morgan": "~1.9.0",
     "pug": "2.0.0-beta11",
-    "serve-favicon": "~2.4.5",
+    "serve-favicon": "~2.4.5"
+  },
+  "devDependencies": {
     "mocha": "^4.0.1",
     "should": "^13.1.2",
     "supertest": "^3.0.0"
