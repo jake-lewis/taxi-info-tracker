@@ -7,22 +7,25 @@ html
     link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous")
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    nav(class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark")
-      span(class="navbar-text navbar-brand") #{title}
+    nav(class="navbar navbar-expand-lg navbar-dark bg-dark")
+      span(class="navbar-text navbar-brand") Taxi Info Tracker
       button(class="navbar-toggler", type="button", data-toggle="collapse", data-target="#navbarToggle", aria-controls="navbarToggle", aria-expanded="false", aria-label="Toggle Navigation")
         span(class="navbar-toggler-icon")
       div(class="collapse navbar-collapse", id="navbarToggle")
         ul(class="navbar-nav mr-auto mt-2 mt-lg-0")
-          li(class="nav-item active")
-            a(class="nav-link" href="#") Home
-          li(class="nav-item")
-            a(class="nav-link" href="#") About
-      span(class="navbar-text") Login
-      span(class="navbar-text") Register
-         
-    block content
-    div(class="jumbotron")
-      h1 Test
+          li(class="nav-item", id ="index")
+            a(class="nav-link", href="/") Home
+          li(class="nav-item", id="about")
+            a(class="nav-link", href="/about") About
+        div(class="dropdown-divider")
+        ul(class="navbar-nav mr-0 mt-2 mt-lg-0")
+          li(class="navbar-item")
+            a(class="nav-link", href="#") Login
+          li(class="navbar-item")
+            a(class="nav-link", href="#") Register
+    div(class="container-fluid")
+      block content
   script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous")
   script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous")
+  script(src="javascripts/navbar.js")
