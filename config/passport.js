@@ -1,6 +1,15 @@
 var LocalStrategy = require('passport-local').Strategy;
+var mysql = require('mysql');
 
-var connection = require('./database');
+var dbConfig = require('./database');
+
+var connection = mysql.createConnection({
+    host: dbConfig.host,
+    user: dbConfig.user,
+    password: dbConfig.password
+});
+
+var factory = require('../app/models/userFactory');
 
 connection.query('USE mysqldb');
 
@@ -39,10 +48,7 @@ module.exports = function(passport) {
                     //No error, username not taken
 
                     //Create user
-                    var newUserMySQL = new Object();
-                    newUserMySQL.username = username;
-                    //TODO Generate salted hash in user model
-                    newUserMySQL.password = password;
+                    var newUserMySQL = factory.create(username, password);
 
                     var insertQuery = "INSERT INTO users ( username, password ) values ('" + username + "','" + password + "')";
                     console.log(inserQuery);
