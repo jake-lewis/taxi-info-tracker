@@ -14,7 +14,7 @@ var session = require('express-session');
 
 var app = express();
 
-//require('./config/passport')(passport);
+require('./config/passport')(passport);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
