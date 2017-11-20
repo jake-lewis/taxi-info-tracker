@@ -11,7 +11,17 @@ var connection = mysql.createConnection({
 
 var factory = require('../app/models/userFactory');
 
-connection.query('USE mysqldb');
+connection.connect(function(err) {
+    if (err) {
+        console.error('error connecting: ' + err.stack);
+        return;
+    }
+    console.log('connected as id ' + connection.threadId);
+});
+
+connection.query('USE mysqldb', function(err, rows) {
+    console.log(err);
+});
 
 //Exposed function
 module.exports = function(passport) {
