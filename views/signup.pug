@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    h1 Signup
+    form(method='POST')
+        div(class='form-group')
+            label Username
+            input(type='text' class='form-control' name='username')
+        div(class='form-group')
+            label Password
+            input(type='password' class='form-control' name='password')
+        button(type='submit' class='btn btn-secondary btn-lg') Signup
+    hr
+    p Have an account? #[a(href='/login') Login]
