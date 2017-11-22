@@ -3,3 +3,5 @@ var dbConfig = {
     user: 'SOFT352_RDS',
     password: 'SOFT352_access'
 };
+
+module.exports = dbConfig;
