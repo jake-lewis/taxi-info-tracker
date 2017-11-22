@@ -1,5 +1,6 @@
 var LocalStrategy = require('passport-local').Strategy;
 var mysql = require('mysql');
+var bcrypt = require('bcrypt-nodejs');
 
 var dbConfig = require('./database');
 
@@ -80,7 +81,7 @@ module.exports = function(passport) {
             passReqToCallback: true
         },
         function(req, username, password, done) {
-            connection.query("SELECT * FROM users WHERE 'username' = '" + username + "'", function(err, rows) {
+            connection.query("SELECT * FROM users WHERE username = '" + username + "'", function(err, rows) {
                 if (err) {
                     return done(err);
                 }
@@ -88,9 +89,9 @@ module.exports = function(passport) {
                     return done(null, false, req.flash('loginMessage', 'No user found'));
                 }
 
-                var localUser = factory.create(username, password);
+                var hash = rows[0].password;
 
-                if (!(localUser.validPassword(rows[0].password))) {
+                if (!(bcrypt.compareSync(password, hash))) {
                     return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));
                 }
 
