@@ -19,8 +19,11 @@ connection.connect(function(err) {
     console.log('connected as id ' + connection.threadId);
 });
 
-connection.query('USE mysqldb', function(err, rows) {
-    console.log(err);
+connection.query('USE node_app_dev', function(err, rows) {
+    if (err) {
+        console.log('Error on "USE node_app_dev"' + err);
+        return;
+    }
 });
 
 //Exposed function
@@ -60,8 +63,8 @@ module.exports = function(passport) {
                     //Create user
                     var newUserMySQL = factory.create(username, password);
 
-                    var insertQuery = "INSERT INTO users ( username, password ) values ('" + username + "','" + password + "')";
-                    console.log(inserQuery);
+                    var insertQuery = "INSERT INTO users ( username, password ) values ('" + newUserMySQL.username + "','" + newUserMySQL.password + "')";
+                    console.log(insertQuery);
                     connection.query(insertQuery, function(err, rows) {
                         newUserMySQL.id = rows.insertId;
                         return done(null, newUserMySQL);
@@ -77,7 +80,7 @@ module.exports = function(passport) {
             passReqToCallback: true
         },
         function(req, username, password, done) {
-            connection.query("SELECT * FROM 'users' WHERE 'username' = '" + username + "'", function(err, rows) {
+            connection.query("SELECT * FROM users WHERE 'username' = '" + username + "'", function(err, rows) {
                 if (err) {
                     return done(err);
                 }
@@ -85,7 +88,9 @@ module.exports = function(passport) {
                     return done(null, false, req.flash('loginMessage', 'No user found'));
                 }
 
-                if (!(rows[0].password === password)) {
+                var localUser = factory.create(username, password);
+
+                if (!(localUser.validPassword(rows[0].password))) {
                     return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));
                 }
 
