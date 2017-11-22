@@ -10,21 +10,27 @@ var connection = mysql.createConnection({
     password: dbConfig.password
 });
 
+var dbSetupDebug = require('debug')('passport:dbSetup');
+var sessionDebug = require('debug')('passport:session');
+var loginDebug = require('debug')('passport:login');
+var signupDebug = require('debug')('passport:signup');
+
 var factory = require('../app/models/userFactory');
 
 connection.connect(function(err) {
     if (err) {
-        console.error('error connecting: ' + err.stack);
+        dbSetupDebug('error connecting: ' + err.stack);
         return;
     }
-    console.log('connected as id ' + connection.threadId);
+    dbSetupDebug('connected as id ' + connection.threadId);
 });
 
 connection.query('USE node_app_dev', function(err, rows) {
     if (err) {
-        console.log('Error on "USE node_app_dev"' + err);
+        dbSetupDebug('Error on "USE node_app_dev"' + err);
         return;
     }
+    dbSetupDebug('Using node_app_dev');
 });
 
 //Exposed function
@@ -32,12 +38,14 @@ module.exports = function(passport) {
     //Serialize the user for the session
     passport.serializeUser(function(user, done) {
         done(null, user.id);
+        sessionDebug('Serialized user "' + user.username + '"');
     });
 
     //Deserialize the user for the session
     passport.deserializeUser(function(id, done) {
         connection.query('select * from users where id = ' + id, function(err, rows) {
             done(err, rows[0]);
+            sessionDebug('Deserialized user "' + rows[0].username + '"');
         });
     });
 
@@ -51,12 +59,13 @@ module.exports = function(passport) {
         function(req, username, password, done) {
             //find a user whose username matches the given username
             connection.query("select * from users where username = '" + username + "'", function(err, rows) {
-                console.log(rows);
-                console.log("above row object");
+                signupDebug(rows);
+                signupDebug("above row object");
                 if (err) {
                     return done(err);
                 }
                 if (rows.length) {
+                    signupDebug('Username already taken');
                     return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
                 } else {
                     //No error, username not taken
@@ -65,7 +74,7 @@ module.exports = function(passport) {
                     var newUserMySQL = factory.create(username, password);
 
                     var insertQuery = "INSERT INTO users ( username, password ) values ('" + newUserMySQL.username + "','" + newUserMySQL.password + "')";
-                    console.log(insertQuery);
+                    signupDebug('Query: ' + insertQuery);
                     connection.query(insertQuery, function(err, rows) {
                         newUserMySQL.id = rows.insertId;
                         return done(null, newUserMySQL);
@@ -86,12 +95,17 @@ module.exports = function(passport) {
                     return done(err);
                 }
                 if (!rows.length) {
+                    loginDebug('User not found');
                     return done(null, false, req.flash('loginMessage', 'No user found'));
                 }
 
                 var hash = rows[0].password;
 
+                loginDebug('Username: ' + username + ', Password: ' + password)
+                loginDebug('Stored password:' + hash)
+
                 if (!(bcrypt.compareSync(password, hash))) {
+                    loginDebug('Passwords don\'t match')
                     return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));
                 }
 

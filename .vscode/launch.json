@@ -13,6 +13,7 @@
             "run-script",
             "debug"
         ],
+        //"env": {"DEBUG": "passport*,factory*", "NODE_ENV": "development"},
         "port": 9229
     }
     ]
