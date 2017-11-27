@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    h1 Profile Page
+    div(class='row')
+        div(class='col-sm-6')
+            div(class='well')
+                h3 Local
+                    p #[strong ID]: #{id}
+                    p #[strong Username]: #{username}
+                    p #[strong Password Hash]: #{hash}

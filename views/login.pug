@@ -2,7 +2,9 @@ extends layout
 
 block content
     h1 Login
-    form(method='POST')
+    if message.length
+        div(class="alert alert-danger") #{message}
+    form(method='POST' action='login')
         div(class='form-group')
             label Username
             input(type='text' class='form-control' name='username')
