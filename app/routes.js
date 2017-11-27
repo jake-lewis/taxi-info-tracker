@@ -1,5 +1,10 @@
 module.exports = function(app, passport) {
 
+    app.get('/*', function(req, res, next) {
+        console.log(req.session.passport);
+        next();
+    })
+0
     //Index (with login links)
     app.get('/', function(req, res) {
         res.render('index', { title: 'Taxi Info Tracker' });
@@ -16,10 +21,24 @@ module.exports = function(app, passport) {
 
     // process the login form
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect: '/',
-        failureRedirect: '/about',
+        failureRedirect: '/login',
         failureFlash: true
-    }));
+    }), function(req, res) {
+        passport.deserializeUser(req.session.passport.user, function(err, user) {
+            if (err)
+                return;
+
+            console.log(user);
+            req.session.user = req.session.passport.user;
+        });
+        
+        //res.redirect('/profile');
+        res.render('profile', {
+            id: req.user.id,
+            username: req.user.username,
+            hash: req.user.password // get the user out of session and pass to template
+        });
+    });
 
     app.get('/signup', function(req, res) {
         // render the page and pass in any flash data if it exists
@@ -29,7 +48,7 @@ module.exports = function(app, passport) {
     // process the signup form
     app.post('/signup', passport.authenticate('local-signup', {
         successRedirect: '/',
-        failureRedirect: '/about',
+        //failureRedirect: '/about',
         failureFlash: true
     }));
 
@@ -52,6 +71,6 @@ module.exports = function(app, passport) {
             return next();
 
         // if they aren't redirect them to the home page
-        res.redirect('/');
+        res.render('login', { message: 'You must be logged in to view this page.'});
     }
 }

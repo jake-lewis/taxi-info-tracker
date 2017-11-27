@@ -44,7 +44,13 @@ module.exports = function(passport) {
     //Deserialize the user for the session
     passport.deserializeUser(function(id, done) {
         connection.query('select * from users where id = ' + id, function(err, rows) {
-            done(err, rows[0]);
+            var user = { 
+                id: rows[0].id, 
+                username: rows[0].username, 
+                password: rows[0].password
+            };
+            //puts user into session
+            done(err, user);
             sessionDebug('Deserialized user "' + rows[0].username + '"');
         });
     });
@@ -96,16 +102,17 @@ module.exports = function(passport) {
                 }
                 if (!rows.length) {
                     loginDebug('User not found');
-                    return done(null, false, req.flash('loginMessage', 'No user found'));
+                    req.flash('loginMessage', 'No user found');
+                    return done(null, false, 401);
                 }
 
                 var hash = rows[0].password;
 
-                loginDebug('Username: ' + username + ', Password: ' + password)
-                loginDebug('Stored password:' + hash)
+                loginDebug('Username: ' + username + ', Password: ' + password);
+                loginDebug('Stored password:' + hash);
 
                 if (!(bcrypt.compareSync(password, hash))) {
-                    loginDebug('Passwords don\'t match')
+                    loginDebug('Passwords don\'t match');
                     return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));
                 }
 
