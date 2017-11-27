@@ -33,7 +33,9 @@ app.use(session(
     cookie: {
         httpOnly: false
     },
-    secret: 'supersecret'
+    secret: 'supersecret',
+    resave: false,
+    saveUninitialized: false
 }));
 app.use(passport.initialize());
 app.use(passport.session());

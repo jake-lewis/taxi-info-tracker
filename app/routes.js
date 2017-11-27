@@ -1,7 +1,7 @@
 module.exports = function(app, passport) {
 
     app.get('/*', function(req, res, next) {
-        console.log(req.session.passport);
+        console.log(req.session.user);
         next();
     })
 0
@@ -28,15 +28,21 @@ module.exports = function(app, passport) {
             if (err)
                 return;
 
-            console.log(user);
-            req.session.user = req.session.passport.user;
+            //User is user object from database, deserialised from user id
+            //console.log('User:');
+            //console.log(user);
+            //req.session.user not being set
+            req.session.user = user;
+            req.session.save(function(err){if (err) console.log(err)});
+
+            console.log('req.session.user');
+            console.log(req.session.user); //undefined
         });
         
         //res.redirect('/profile');
         res.render('profile', {
             id: req.user.id,
-            username: req.user.username,
-            hash: req.user.password // get the user out of session and pass to template
+            username: req.user.username // get the user out of session and pass to template
         });
     });
 
