@@ -5,6 +5,7 @@ var flash = require('connect-flash');
 
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+var uid = require('uid-safe');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
@@ -22,7 +23,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use(session({ secret: 'supersecret' }));
+app.use(session(
+    { genid: function(req) {
+        uid(18, function (err, string) {
+            if (err) throw err;
+            return string;
+        });
+    },
+    cookie: {
+        httpOnly: false
+    },
+    secret: 'supersecret'
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -34,6 +46,7 @@ var options = {
 app.use(express.static(path.join(__dirname, 'public'), options));
 
 require('./app/routes')(app, passport);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
