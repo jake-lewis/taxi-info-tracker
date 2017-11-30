@@ -1,3 +1,46 @@
 .container-fluid {
     padding-top: 2rem;
 }
+
+/* html, body, .container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+} */
+#map_container {
+    position: relative;
+    padding: 50%;
+}
+
+@media (min-width: 576px) {
+    #map_container {
+        padding: 50%;
+    }
+}
+
+@media (min-width: 768px) { 
+    #map_container {
+        padding: 40%;
+    }
+}
+
+@media (min-width: 992px) {
+    #map_container {
+        padding: 30%;
+    }
+}
+
+@media (min-width: 1200px) {
+    #map_container {
+        padding: 20%;
+    }
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}

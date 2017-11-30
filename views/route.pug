@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    h1 Route
+    form(method='POST' action='getRoute')
+        div(class='form-group')
+            label Origin
+            input(type='text' class='form-control' name='origin')
+        div(class='form-group')
+            label Destination
+            input(type='text' class='form-control' name='destination')
+        button(type='submit' class='btn btn-secondary btn-lg') Test Route
+    div(id='map_container' class='')    
+        div(id='map')
+    if route
+        script(src="javascripts/map.js")
+        script(src="https://maps.googleapis.com/maps/api/js?key=" + key + "&callback=initMap" async defer)

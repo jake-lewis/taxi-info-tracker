@@ -36,6 +36,7 @@
     "uid-safe": "^2.1.5"
   },
   "devDependencies": {
+    "@google/maps": "^0.4.5",
     "jquery": "^3.2.1",
     "jsdom": "^11.3.0",
     "mocha": "^4.0.1",

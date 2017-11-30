@@ -1,3 +1,6 @@
+var map = require('./map');
+var googleApiKeys = require('../config/googleAPI')
+
 module.exports = function(app, passport) {
 
     app.get('/*', function(req, res, next) {
@@ -13,6 +16,32 @@ module.exports = function(app, passport) {
     //About page
     app.get('/about', function(req, res) {
         res.render('about', { title: 'About Page' });
+    });
+
+    app.get('/route', function(req, res) {
+        res.render('route');
+    })
+
+    //Map API test
+    app.post('/getRoute', function(req, res) {
+
+        var query = { 
+            origin: req.body.origin, 
+            destination: req.body.destination, 
+            mode: 'driving'}
+
+        var route;
+
+        map.getRoute(query, function(err, response) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+
+            console.log(response.json);
+            
+            res.render('route', { route: response, key: googleApiKeys.mapWebService });
+        }, googleApiKeys.javascriptMap);
     });
 
     app.get('/login', function(req, res) {
