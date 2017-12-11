@@ -41,7 +41,7 @@ module.exports = function(app, passport) {
 
             console.log(response.json);
 
-            res.render('route', { route: response, key: googleApiKeys.mapWebService });
+            res.render('route', { user: req.session.user, route: response, key: googleApiKeys.mapWebService });
         }, googleApiKeys.javascriptMap);
     });
 
