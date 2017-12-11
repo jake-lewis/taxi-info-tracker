@@ -3,11 +3,12 @@ var googleApiKeys = require('../config/googleAPI')
 
 module.exports = function(app, passport) {
 
-    app.get('/*', function(req, res, next) {
-        console.log('test output' + req.session.user);
-        req.user = req.session.user;
-        next();
-    });
+    // app.get('/*', function(req, res, next) {
+    //     console.log('test output' + req.session.user);
+        
+    //     req.user = req.session.user;
+    //     next();
+    // });
 
     //Index (with login links)
     app.get('/', function(req, res) {
@@ -55,25 +56,25 @@ module.exports = function(app, passport) {
         failureRedirect: '/login',
         failureFlash: true
     }), function(req, res) {
+        console.log(1);
         passport.deserializeUser(req.session.passport.user, function(err, user) {
-            if (err)
+            console.log(2);
+            if (err) {
+                console.log(3);
                 return;
+            }
 
             //User is user object from database, deserialised from user id
-            //console.log('User:');
-            //console.log(user);
-            //req.session.user not being set
-            req.session.user = user;
-            req.session.save(function(err) { if (err) console.log(err) });
-
-            console.log('req.session.user');
-            console.log(req.session.user); //undefined
+            req.session.user = {};
+            req.session.user.id = user.id;
+            req.session.user.username = user.username;
+            console.log(4);
         });
 
-        //res.redirect('/profile');
+        console.log(5);
+        //res.redirect('/profile', {user: req.session.user});
         res.render('profile', {
-            id: req.user.id,
-            username: req.user.username // get the user out of session and pass to template
+            user: req.session.user
         });
     });
 
@@ -91,7 +92,7 @@ module.exports = function(app, passport) {
 
     app.get('/profile', isLoggedIn, function(req, res) {
         res.render('profile', {
-            user: req.user // get the user out of session and pass to template
+            user: req.session.user // get the user out of session and pass to template
         });
     });
 
