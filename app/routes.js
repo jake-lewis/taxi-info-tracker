@@ -60,6 +60,7 @@ module.exports = function(app, passport) {
             }
 
             //User is user object from database, deserialised from user id
+            //Doesn't directly set res.session.user as user to avoid password hash being sent
             req.session.user = {};
             req.session.user.id = user.id;
             req.session.user.username = user.username;

@@ -5,7 +5,6 @@ var flash = require('connect-flash');
 
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var uid = require('uid-safe');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
