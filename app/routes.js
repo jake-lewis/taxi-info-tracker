@@ -4,10 +4,11 @@ var googleApiKeys = require('../config/googleAPI')
 module.exports = function(app, passport) {
 
     app.get('/*', function(req, res, next) {
-        console.log(req.session.user);
+        console.log('test output' + req.session.user);
+        req.user = req.session.user;
         next();
-    })
-0
+    });
+
     //Index (with login links)
     app.get('/', function(req, res) {
         res.render('index', { title: 'Taxi Info Tracker' });
@@ -25,10 +26,11 @@ module.exports = function(app, passport) {
     //Map API test
     app.post('/getRoute', function(req, res) {
 
-        var query = { 
-            origin: req.body.origin, 
-            destination: req.body.destination, 
-            mode: 'driving'}
+        var query = {
+            origin: req.body.origin,
+            destination: req.body.destination,
+            mode: 'driving'
+        }
 
         var route;
 
@@ -39,7 +41,7 @@ module.exports = function(app, passport) {
             }
 
             console.log(response.json);
-            
+
             res.render('route', { route: response, key: googleApiKeys.mapWebService });
         }, googleApiKeys.javascriptMap);
     });
@@ -62,12 +64,12 @@ module.exports = function(app, passport) {
             //console.log(user);
             //req.session.user not being set
             req.session.user = user;
-            req.session.save(function(err){if (err) console.log(err)});
+            req.session.save(function(err) { if (err) console.log(err) });
 
             console.log('req.session.user');
             console.log(req.session.user); //undefined
         });
-        
+
         //res.redirect('/profile');
         res.render('profile', {
             id: req.user.id,
@@ -106,6 +108,6 @@ module.exports = function(app, passport) {
             return next();
 
         // if they aren't redirect them to the home page
-        res.render('login', { message: 'You must be logged in to view this page.'});
+        res.render('login', { message: 'You must be logged in to view this page.' });
     }
 }
