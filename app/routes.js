@@ -3,12 +3,10 @@ var googleApiKeys = require('../config/googleAPI')
 
 module.exports = function(app, passport) {
 
-    // app.get('/*', function(req, res, next) {
-    //     console.log('test output' + req.session.user);
-        
-    //     req.user = req.session.user;
-    //     next();
-    // });
+    app.get('/*', function(req, res, next) {
+        res.locals.user = req.session.user;
+        next();
+    });
 
     //Index (with login links)
     app.get('/', function(req, res) {
@@ -57,7 +55,7 @@ module.exports = function(app, passport) {
         failureFlash: true
     }), function(req, res) {
         console.log(1);
-        passport.deserializeUser(req.session.passport.user, function(err, user) {
+        passport.deserializeUser(req.session.passport.user, req, function(err, user) {
             console.log(2);
             if (err) {
                 console.log(3);
@@ -69,13 +67,17 @@ module.exports = function(app, passport) {
             req.session.user.id = user.id;
             req.session.user.username = user.username;
             console.log(4);
+
+            res.render('profile', {
+                user: req.session.user
+            });
         });
 
         console.log(5);
         //res.redirect('/profile', {user: req.session.user});
-        res.render('profile', {
-            user: req.session.user
-        });
+        // res.render('profile', {
+        //     user: req.session.user
+        // });
     });
 
     app.get('/signup', function(req, res) {
