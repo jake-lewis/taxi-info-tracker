@@ -24,12 +24,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(session({
-    // genid: function(req) {
-    //     uid(18, function(err, string) {
-    //         if (err) throw err;
-    //         return string;
-    //     });
-    // },
     cookie: {
         httpOnly: false
     },

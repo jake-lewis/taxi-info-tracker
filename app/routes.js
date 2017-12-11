@@ -54,11 +54,8 @@ module.exports = function(app, passport) {
         failureRedirect: '/login',
         failureFlash: true
     }), function(req, res) {
-        console.log(1);
         passport.deserializeUser(req.session.passport.user, req, function(err, user) {
-            console.log(2);
             if (err) {
-                console.log(3);
                 return;
             }
 
@@ -66,18 +63,11 @@ module.exports = function(app, passport) {
             req.session.user = {};
             req.session.user.id = user.id;
             req.session.user.username = user.username;
-            console.log(4);
 
             res.render('profile', {
                 user: req.session.user
             });
         });
-
-        console.log(5);
-        //res.redirect('/profile', {user: req.session.user});
-        // res.render('profile', {
-        //     user: req.session.user
-        // });
     });
 
     app.get('/signup', function(req, res) {
@@ -88,7 +78,6 @@ module.exports = function(app, passport) {
     // process the signup form
     app.post('/signup', passport.authenticate('local-signup', {
         successRedirect: '/',
-        //failureRedirect: '/about',
         failureFlash: true
     }));
 
@@ -99,6 +88,7 @@ module.exports = function(app, passport) {
     });
 
     app.get('/logout', function(req, res) {
+        delete req.session.user;
         req.logout();
         res.redirect('/');
     });

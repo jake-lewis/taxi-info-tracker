@@ -33,7 +33,6 @@
         "passport-local": "^1.0.0",
         "pug": "2.0.0-beta11",
         "serve-favicon": "~2.4.5",
-        "uid-safe": "^2.1.5",
         "@google/maps": "^0.4.5"
     },
     "devDependencies": {
