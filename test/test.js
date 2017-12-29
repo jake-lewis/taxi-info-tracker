@@ -1,6 +1,7 @@
 var supertest = require("supertest");
 var should = require("should");
 var jsdom = require('jsdom');
+var jobFactory = require('../app/models/jobFactory');
 const { JSDOM } = jsdom;
 
 // This agent refers to PORT where the program is running.
@@ -57,4 +58,18 @@ describe("Test Navbar Functionality", function() {
         });
     });
 
+});
+
+describe("Test Factories", function() {
+
+    // #1 Test if job factory works
+    it("Job Factory", function(done) {
+        var testRoute = { route: "route" };
+
+        var job = jobFactory.create(5, 'zezblit', testRoute);
+
+        job.userId.should.equal(5);
+        job.username.should.equal('zezblit');
+        job.route.should.equal(testRoute);
+    });
 });
