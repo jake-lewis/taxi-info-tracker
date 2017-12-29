@@ -1,5 +1,5 @@
 var map = require('./map');
-var googleApiKeys = require('../config/googleAPI')
+var googleApiKeys = require('../config/googleAPI');
 
 module.exports = function(app, passport) {
 
