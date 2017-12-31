@@ -18,9 +18,13 @@ module.exports = function(app, passport) {
         res.render('about', { title: 'About Page' });
     });
 
-    app.get('/route', function(req, res) {
+    app.get('/route', isLoggedIn, function(req, res) {
         res.render('route');
-    })
+    });
+
+    app.get('/routeList', isLoggedIn, function(req, res) {
+        //res.render('routeList');
+    });
 
     //Map API test
     app.post('/getRoute', function(req, res) {
