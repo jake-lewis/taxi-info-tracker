@@ -1,4 +1,5 @@
 var map = require('./map');
+var routes = require('./routeList');
 var googleApiKeys = require('../config/googleAPI');
 
 module.exports = function(app, passport) {
@@ -23,11 +24,17 @@ module.exports = function(app, passport) {
     });
 
     app.get('/routeList', isLoggedIn, function(req, res) {
-        //res.render('routeList');
+        routes.getRoutes(res.locals.user, function(err, routeList) {
+            if (err) {
+                console.error(err);
+            } else {
+                res.render('routeList', { routeList });
+            }
+        });
     });
 
     //Map API test
-    app.post('/getRoute', function(req, res) {
+    app.post('/route', function(req, res) {
 
         var query = {
             origin: req.body.origin,
