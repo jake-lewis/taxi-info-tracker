@@ -38,25 +38,11 @@ describe("Test Factories", function() {
         done();
     });
 
-    it("Connection factory", function() {
-        // dbConnection.getConnection((connection) => {
-        //         connection.state.should.equal('authenticated');
+    it("Connection promise", function() {
 
-        //         // connection.query('SELECT * ROUTE WHERE userId = ' + userId, function(err, rows) {
-        //         //     done(err, rows);
-        //         // });
-        //     },
-        //     (err) => {
-        //         expect.fail(err);
-        //     });
-        // done();
-
-        return dbConnection.getConnection((connection) => {
+        //Mocha handles returning a Promise, without needing a failure handler or done() callback
+        return dbConnection.getConnection().then((connection) => {
             connection.state.should.equal('authenticated');
-
-            // connection.query('SELECT * ROUTE WHERE userId = ' + userId, function(err, rows) {
-            //     done(err, rows);
-            // });
         });
     });
 });
