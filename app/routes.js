@@ -60,25 +60,23 @@ module.exports = function(app, passport) {
         res.render('login', { message: req.flash('loginMessage') });
     });
 
-    // process the login form
-    app.post('/login', passport.authenticate('local-login', {
-        failureRedirect: '/login',
-        failureFlash: true
-    }), function(req, res) {
-        passport.deserializeUser(req.session.passport.user, req, function(err, user) {
-            if (err) {
-                return;
+    //Attempt at custom failure callback on post
+    app.post('/login', function(req, res, next) {
+        passport.authenticate('local-login', function(err, user, info) {
+            if (err) { return next(err); }
+            if (!user) {
+                res.status(401);
+                return res.render('login', { message: req.flash('loginMessage') });
             }
+            req.logIn(user, function(err) {
+                if (err) { console.log(err); return next(err); }
 
-            //User is user object from database, deserialised from user id
-            req.session.user = {};
-            req.session.user.id = user.id;
-            req.session.user.username = user.username;
+                //prevent password hash from being sent to client
+                delete user.password;
 
-            res.render('profile', {
-                user: req.session.user
+                return res.render('profile', { user: user });
             });
-        });
+        })(req, res, next);
     });
 
     app.get('/signup', function(req, res) {
