@@ -4,12 +4,14 @@ var dbConfig = require('../../config/database');
 var dbConfigDebug = require('debug')('connection:config');
 var dbSetupDebug = require('debug')('connection:init');
 
-//Create a promise that returns a new connection, or an existing conneciton if it is valid
+//Create a promise that returns a new connection, or an existing connection if it is valid
 var getConnection = function(resolve, reject) {
     dbConfigDebug('Host: :' + dbConfig.host);
     dbConfigDebug('User: :' + dbConfig.user);
     dbConfigDebug('Password: :' + dbConfig.password);
 
+    //TODO creates connection every time, should probably get from a mysql.pool
+    //Pool could be something keyed on user ID?
     var connection = mysql.createConnection({
         host: dbConfig.host,
         user: dbConfig.user,
@@ -44,7 +46,7 @@ var getConnection = function(resolve, reject) {
         } else if (connection.state === 'authenticated') {
             resolve(connection);
         } else {
-            reject('Connection state is wrong');
+            reject('Connection state is wrong: ' + connection.state);
         }
     });
 }
