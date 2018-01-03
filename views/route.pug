@@ -4,18 +4,17 @@ block content
     div(class='row')
         div(class='col-sm-12')
             h1 Route
-            form(method='POST' action='getRoute')
+            form(action='javascript:calcRoute()')
                 div(class='form-group')
                     label Origin
-                    input(type='text' class='form-control' name='origin')
+                    input(type='text' class='form-control' id='origin')
                 div(class='form-group')
                     label Destination
-                    input(type='text' class='form-control' name='destination')
+                    input(type='text' class='form-control' id='destination')
                 button(type='submit' class='btn btn-secondary btn-lg') Test Route
     div(class='row')
         div(class='col-sm-12')
             div(id='map_container')    
                 div(id='map')
-    if route
-        script(src="javascripts/map.js")
-        script(src="https://maps.googleapis.com/maps/api/js?key=" + key + "&callback=initMap" async defer)
+    script(src="javascripts/map.js")
+    script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUshCrF9KqX52BRkjbKrVw5KLXxOZCYVs&callback=initMap" async defer)
