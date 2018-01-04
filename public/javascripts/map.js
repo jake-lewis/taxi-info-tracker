@@ -49,6 +49,13 @@ function initMap() {
     directionsService.route(request, function(result, status) {
       if (status == 'OK') {
         directionsDisplay.setDirections(result);
+
+        //TODO
+        //POST result to server
+        var xhttp = new XMLHttpRequest();
+        xhttp.open('POST', window.location.href, true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.send(JSON.stringify(result));
       }
     });
   }
