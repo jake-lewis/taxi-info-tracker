@@ -1,4 +1,5 @@
 var routes = require('./routeList');
+var routeFactory = require('./models/routeFactory');
 var googleApiKeys = require('../config/googleAPI');
 
 module.exports = function(app, passport) {
@@ -23,7 +24,19 @@ module.exports = function(app, passport) {
     });
 
     app.post('/route', function(req, res) {
-        console.log(req.body);
+        var route = routeFactory.create(req.body);
+        
+        var userId = req.user.id;
+
+        routeFactory.store(userId, route, function(err, result) {
+            if (err) { 
+                console.error(err);
+                return;
+            }
+
+            console.log(result);
+        });
+
         res.status(200);
     });
 
