@@ -1,5 +1,6 @@
 var map = require('./map');
-var googleApiKeys = require('../config/googleAPI')
+var routes = require('./routeList');
+var googleApiKeys = require('../config/googleAPI');
 
 module.exports = function(app, passport) {
 
@@ -18,12 +19,22 @@ module.exports = function(app, passport) {
         res.render('about', { title: 'About Page' });
     });
 
-    app.get('/route', function(req, res) {
+    app.get('/route', isLoggedIn, function(req, res) {
         res.render('route');
-    })
+    });
+
+    app.get('/routeList', isLoggedIn, function(req, res) {
+        routes.getRoutes(res.locals.user, function(err, routeList) {
+            if (err) {
+                console.error(err);
+            } else {
+                res.render('routeList', { routeList });
+            }
+        });
+    });
 
     //Map API test
-    app.post('/getRoute', function(req, res) {
+    app.post('/route', function(req, res) {
 
         var query = {
             origin: req.body.origin,
@@ -49,26 +60,23 @@ module.exports = function(app, passport) {
         res.render('login', { message: req.flash('loginMessage') });
     });
 
-    // process the login form
-    app.post('/login', passport.authenticate('local-login', {
-        failureRedirect: '/login',
-        failureFlash: true
-    }), function(req, res) {
-        passport.deserializeUser(req.session.passport.user, req, function(err, user) {
-            if (err) {
-                return;
+    //Attempt at custom failure callback on post
+    app.post('/login', function(req, res, next) {
+        passport.authenticate('local-login', function(err, user, info) {
+            if (err) { return next(err); }
+            if (!user) {
+                res.status(401);
+                return res.render('login', { message: req.flash('loginMessage') });
             }
+            req.logIn(user, function(err) {
+                if (err) { console.log(err); return next(err); }
 
-            //User is user object from database, deserialised from user id
-            //Doesn't directly set res.session.user as user to avoid password hash being sent
-            req.session.user = {};
-            req.session.user.id = user.id;
-            req.session.user.username = user.username;
+                //prevent password hash from being sent to client
+                delete user.password;
 
-            res.render('profile', {
-                user: req.session.user
+                return res.render('profile', { user: user });
             });
-        });
+        })(req, res, next);
     });
 
     app.get('/signup', function(req, res) {

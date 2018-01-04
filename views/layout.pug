@@ -15,8 +15,12 @@ html
         ul(class="navbar-nav mr-auto mt-2 mt-lg-0")
           li(class="nav-item", id ="index")
             a(class="nav-link", href="/") Home
-          li(class="nav-item", id="route")
-            a(class="nav-link", href="/route") Route
+          li(class="nav-item dropdown", id="route")
+            button(class="btn nav-link btn-menu dropdown-toggle", type="button", id="routeDropdown", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Routes
+            //a(class="nav-link", href="/route") Route
+            div(class="dropdown-menu bg-dark", aria-labelledby="dropdownMenuButton")
+              a(class="nav-link", href="/route") Log Route
+              a(class="nav-link", href="/routeList") Route List
           li(class="nav-item", id="about")
             a(class="nav-link", href="/about") About
         div(class="dropdown-divider")

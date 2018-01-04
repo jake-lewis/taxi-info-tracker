@@ -1,60 +1,84 @@
-var supertest = require("supertest");
-var should = require("should");
-var jsdom = require('jsdom');
-const { JSDOM } = jsdom;
-
-// This agent refers to PORT where the program is running.
-
-var server = supertest.agent("http://localhost:3000");
+var app = require('../app');
+var chai = require('chai');
+var chaiHttp = require('chai-http');
+var should = chai.should();
+var expect = chai.expect;
+var jobFactory = require('../app/models/jobFactory');
+var dbConnection = require('../app/models/dbConnection');
 
 // UNIT test begin
+
+chai.use(chaiHttp);
 
 describe("Basic Server Functionality", function() {
 
     // #1 should return home page
     it("returns homepage", function(done) {
         // calling home page
-        server
+        chai.request(app)
             .get("/")
-            .expect("Content-type", /text/)
-            .expect(200) // THis is HTTP response
-            .end(function(err, res) {
-                // HTTP status should be 200
-                res.status.should.equal(200);
+            .end((err, res) => {
+                res.should.have.status(200);
                 done();
             });
     });
 
 });
 
-describe("Test Navbar Functionality", function() {
+describe("Test Factories", function() {
 
-    // #1 should return home page
-    it("applies active class for page", function(done) {
-        // calling home page
-        const indexDom = new JSDOM('', {
-            url: 'http://localhost:3000/'
-        });
+    // #1 Test if job factory works
+    it("Job Factory", function(done) {
+        var testRoute = { route: "route" };
 
-        console.log(indexDom.window.document.querySelector('#index').textContent);
-        // server
-        //     .get("/")
-        //     .expect("Content-type", /text/)
-        //     .expect(200)
-        //     .end(function(err, res) {
-        //         //$('#index').hasClass('active').should.equal(true);
-        //     });
-        // server
-        //     .get("/about")
-        //     .expect("Content-type", /text/)
-        //     .expect(200)
-        //     .end(function(err, res) {
-        //         //$('#about').hasClass('active').should.equal(true);
-        //         done();
-        //     });
-        const aboutDom = new JSDOM('', {
-            url: 'localhost:3001/about'
-        });
+        var job = jobFactory.create(5, 'zezblit', testRoute);
+
+        job.userId.should.equal(5);
+        job.username.should.equal('zezblit');
+        job.route.should.equal(testRoute);
+        done();
     });
 
+    it("Connection promise", function() {
+
+        //Mocha handles returning a Promise, without needing a failure handler or done() callback
+        return dbConnection.getConnection().then((connection) => {
+            connection.state.should.equal('authenticated');
+        }).catch((error) => {
+            assert.isNotOk(error, 'Promise error');
+        });
+    });
+});
+
+describe("Test authentication", function(done) {
+
+    //Increased timeout
+    it("Successful Login", function(done) {
+        chai.request(app)
+            .post('/login')
+            .send({
+                username: 'testUser',
+                password: 'password'
+            })
+            .end(function(err, res) {
+                expect(err).to.be.null;
+                expect(res).to.have.status(200);
+                done();
+            });
+    }).timeout(50000);
+
+    it("Failed Login", function(done) {
+
+        chai.request(app)
+            .post('/login')
+            .send({
+                username: 'testUser',
+                password: 'error'
+            })
+            .end(function(err, res) {
+                //Apparently checking against err for "Unauthorized" doesn't work with chai-http ¯\_(ツ)_/¯
+                expect(res).to.have.status(401);
+                done();
+            });
+    }).timeout(50000);
 });
