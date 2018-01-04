@@ -5,7 +5,7 @@ var googleApiKeys = require('../config/googleAPI');
 module.exports = function(app, passport) {
 
     app.get('/*', function(req, res, next) {
-        res.locals.user = req.session.user;
+        res.locals.user = req.user;
         next();
     });
 
@@ -52,7 +52,7 @@ module.exports = function(app, passport) {
 
             console.log(response.json);
 
-            res.render('route', { user: req.session.user, route: response, key: googleApiKeys.mapWebService });
+            res.render('route', { user: req.user, route: response, key: googleApiKeys.mapWebService });
         }, googleApiKeys.javascriptMap);
     });
 
@@ -68,13 +68,15 @@ module.exports = function(app, passport) {
                 res.status(401);
                 return res.render('login', { message: req.flash('loginMessage') });
             }
+            
             req.logIn(user, function(err) {
                 if (err) { console.log(err); return next(err); }
 
                 //prevent password hash from being sent to client
-                delete user.password;
+                delete req.user.password;
 
-                return res.render('profile', { user: user });
+                //res.redirect('profile');
+                return res.render('profile', { user: req.user });
             });
         })(req, res, next);
     });
@@ -92,12 +94,12 @@ module.exports = function(app, passport) {
 
     app.get('/profile', isLoggedIn, function(req, res) {
         res.render('profile', {
-            user: req.session.user // get the user out of session and pass to template
+            user: req.user // get the user out of session and pass to template
         });
     });
 
     app.get('/logout', function(req, res) {
-        delete req.session.user;
+        delete req.user;
         req.logout();
         res.redirect('/');
     });
