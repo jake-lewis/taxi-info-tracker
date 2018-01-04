@@ -44,7 +44,8 @@ function initMap() {
     var request = {
       origin: start,
       destination: end,
-      travelMode: 'DRIVING'
+      travelMode: 'DRIVING',
+      unitSystem: google.maps.UnitSystem.IMPERIAL
     };
     directionsService.route(request, function(result, status) {
       if (status == 'OK') {
