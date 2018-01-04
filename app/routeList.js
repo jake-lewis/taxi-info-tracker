@@ -31,7 +31,7 @@ var getRoutes = function(user, done) {
         console.error(err);
     }
 
-    connection.then(resolve, reject)
+    connection.then(resolve, reject);
 };
 
 var routeList = { getRoutes: getRoutes };

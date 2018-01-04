@@ -22,6 +22,11 @@ module.exports = function(app, passport) {
         res.render('route', {javascriptMapKey: googleApiKeys.javascriptMap});
     });
 
+    app.post('/route', function(req, res) {
+        console.log(req.body);
+        res.status(200);
+    });
+
     app.get('/routeList', isLoggedIn, function(req, res) {
         routes.getRoutes(res.locals.user, function(err, routeList) {
             if (err) {
@@ -50,6 +55,11 @@ module.exports = function(app, passport) {
 
                 //prevent password hash from being sent to client
                 delete req.user.password;
+
+                //TODO IF has origin url, render that instead
+                if(req.session.originalUrl) {
+                    return res.redirect(req.session.originalUrl);
+                }
 
                 //res.redirect('profile');
                 return res.render('profile', { user: req.user });
@@ -86,6 +96,9 @@ module.exports = function(app, passport) {
         // if user is authenticated in the session, carry on 
         if (req.isAuthenticated())
             return next();
+
+        //record origin ID
+        req.session.originalUrl = req.originalUrl;
 
         // if they aren't redirect them to the home page
         res.render('login', { message: 'You must be logged in to view this page.' });
