@@ -1,4 +1,3 @@
-var map = require('./map');
 var routes = require('./routeList');
 var googleApiKeys = require('../config/googleAPI');
 
@@ -20,7 +19,7 @@ module.exports = function(app, passport) {
     });
 
     app.get('/route', isLoggedIn, function(req, res) {
-        res.render('route');
+        res.render('route', {javascriptMapKey: googleApiKeys.javascriptMap});
     });
 
     app.get('/routeList', isLoggedIn, function(req, res) {
