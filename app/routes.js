@@ -33,29 +33,6 @@ module.exports = function(app, passport) {
         });
     });
 
-    //Map API test
-    app.post('/route', function(req, res) {
-
-        var query = {
-            origin: req.body.origin,
-            destination: req.body.destination,
-            mode: 'driving'
-        }
-
-        var route;
-
-        map.getRoute(query, function(err, response) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-
-            console.log(response.json);
-
-            res.render('route', { user: req.user, route: response, key: googleApiKeys.mapWebService });
-        }, googleApiKeys.javascriptMap);
-    });
-
     app.get('/login', function(req, res) {
         res.render('login', { message: req.flash('loginMessage') });
     });
