@@ -29,7 +29,7 @@ var factory = {
         if (!userId) {
             done('UserID cannot be null', null);
         } else {
-            var insertQuery = 'INSERT INTO routes (userId, origin, destination, distanceJSON, durationJSON, routeJSON) values (' + userId + ',"' + route.origin + '","' + route.destination + '","' + JSON.stringify(route.distance) + '","' + JSON.stringify(route.duration) + '","' + JSON.stringify(route.routeJSON) + '")';
+            var insertQuery = 'INSERT INTO routes (userId, origin, destination) values (' + userId + ',"' + route.origin + '","' + route.destination + '")';
 
             var connection = dbConnection.getConnection();
             var resolve = function(connection) {
