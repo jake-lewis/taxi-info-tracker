@@ -5,6 +5,7 @@ var googleApiKeys = require('../config/googleAPI');
 module.exports = function(app, passport) {
 
     app.get('/*', function(req, res, next) {
+        res.set('X-Clacks-Overhead', 'GNU Terry Pratchett')
         res.locals.user = req.user;
         next();
     });
@@ -34,7 +35,9 @@ module.exports = function(app, passport) {
                 return;
             }
 
-            console.log(result);
+            route.id = result.insertId;
+            route.userId = userId;
+            console.log(route);
         });
 
         res.status(200);
