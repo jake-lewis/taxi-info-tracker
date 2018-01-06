@@ -46,11 +46,35 @@ module.exports = function(app, passport) {
     app.get('/routeList', isLoggedIn, function(req, res) {
         routes.getRoutes(res.locals.user, function(err, routeList) {
             if (err) {
-                console.error(err);
+                res.status(500);
+                res.render('error', err);
             } else {
                 res.render('routeList', { routeList });
             }
         });
+    });
+
+    app.get('/createJob', isLoggedIn, function(req, res, next) {
+        if (req.query.routeId) {
+            //Create job from specific route
+            routes.getRoutes(res.locals.user, req.query.routeId, function(err, routeList) {
+                if (err) {
+                    res.status(500);
+                    res.redirect('error', err);
+                } else {
+                    res.render('createJob', { routeList });
+                }
+            });
+        } else {
+            routes.getRoutes(res.locals.user, function(err, routeList) {
+                if (err) {
+                    res.status(500);
+                    res.redirect('error', err);
+                } else {
+                    res.render('createJob', { routeList });
+                }
+            });
+        }
     });
 
     app.get('/login', function(req, res) {
