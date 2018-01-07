@@ -1,2 +1,2 @@
 #!/bin/sh
-sudo killall node
+# sudo killall node
