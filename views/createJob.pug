@@ -12,28 +12,31 @@ block content
     form(action="createJob", method="post")
         div(class="row ")
             div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
-                input(class="form-control" type="text", name="origin" value=''+ origin)
+                input(class="form-control" type="text", name="origin" value=''+ origin required)
                 div(class="input-group-append")
                     span(class="input-group-text") Origin
         div(class="row ")
             div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
-                input(class="form-control" type="text", name="destination" value=''+ destination)
+                input(class="form-control" type="text", name="destination" value=''+ destination required)
                 div(class="input-group-append")
                     span(class="input-group-text") Destination
         div(class="row ")
             div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
-                input(class="form-control" type="datetime-local", name="datetime-start", value=''+ today, min-width="170")
+                input(class="form-control" type="datetime-local", name="datetime_start", value=''+ today, min-width="170" required)
                 div(class="input-group-append")
                     span(class="input-group-text") Start Date & Time
         div(class="row ")
             div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
-                input(class="form-control" type="datetime-local", name="datetime-finish" value='')
+                input(class="form-control" type="datetime-local", name="datetime_finish" value='' required)
                 div(class="input-group-append")
                     span(class="input-group-text") End Date & Time
         div(class="row ")
             div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
                 div(class="input-group-prepend")
                     span(class="input-group-text") £
-                input(type="number" value="0.00" min="0.00" step="1.00" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency")/ 
+                input(name="fare" type="number" value="0.00" min="0.00" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" required) 
                 div(class="input-group-append")
                     span(class="input-group-text") Fare
+        div(class="row")
+            div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
+                button(type='submit' class='btn btn-secondary btn-block') Create Job

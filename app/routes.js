@@ -1,5 +1,6 @@
 var routes = require('./routeList');
 var routeFactory = require('./models/routeFactory');
+var jobFactory = require('./models/jobFactory');
 var googleApiKeys = require('../config/googleAPI');
 
 module.exports = function(app, passport) {
@@ -75,6 +76,12 @@ module.exports = function(app, passport) {
                 }
             });
         }
+    });
+
+    app.post('/createJob', isLoggedIn, function(req, res, next) {
+        var job = jobFactory.create(req.user, req.body);
+        console.log(job);
+        res.send('Done');
     });
 
     app.get('/login', function(req, res) {
