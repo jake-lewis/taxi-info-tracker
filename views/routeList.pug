@@ -3,4 +3,11 @@ extends layout
 block content
     ul(class="list-group")
         for route in routeList
-            li(class="list-group-item") Route ID: #{route.id} | Origin: #{route.origin} | Destination: #{route.destination}
+            - var routeId = route.id;
+            li(class="list-group-item")
+                div Route ID: #{route.id}
+                div Origin: #{route.origin} 
+                div Destination: #{route.destination}
+                form(action="createJob", method="get")
+                    input(type="hidden" name="routeId" value= + routeId)
+                    button(class="badge badge-secondary" type="submit") Create Job

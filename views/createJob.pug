@@ -3,4 +3,7 @@ extends layout
 block content
     ul(class="list-group")
         for route in routeList
-            li(class="list-group-item") Route ID: #{route.id} | Origin: #{route.origin} | Destination: #{route.destination}
+            li(class="list-group-item") 
+                div Route ID: #{route.id}
+                div Origin: #{route.origin} 
+                div Destination: #{route.destination}

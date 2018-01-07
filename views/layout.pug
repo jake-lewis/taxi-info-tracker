@@ -17,10 +17,14 @@ html
             a(class="nav-link", href="/") Home
           li(class="nav-item dropdown", id="route")
             button(class="btn nav-link btn-menu dropdown-toggle", type="button", id="routeDropdown", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Routes
-            //a(class="nav-link", href="/route") Route
             div(class="dropdown-menu bg-dark", aria-labelledby="dropdownMenuButton")
               a(class="nav-link", href="/route") Log Route
               a(class="nav-link", href="/routeList") Route List
+          li(class="nav-item dropdown", id="job")
+            button(class="btn nav-link btn-menu dropdown-toggle", type="button", id="jobDropdown", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Jobs
+            div(class="dropdown-menu bg-dark", aria-labelledby="dropdownMenuButton")
+              a(class="nav-link", href="/createJob") Record Job
+              a(class="nav-link", href="#") Job List
           li(class="nav-item", id="about")
             a(class="nav-link", href="/about") About
         div(class="dropdown-divider")

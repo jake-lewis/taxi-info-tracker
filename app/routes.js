@@ -37,7 +37,6 @@ module.exports = function(app, passport) {
 
             route.id = result.insertId;
             route.userId = userId;
-            console.log(route);
         });
 
         res.status(200);
@@ -71,7 +70,7 @@ module.exports = function(app, passport) {
                     res.status(500);
                     res.redirect('error', err);
                 } else {
-                    res.render('createJob', { routeList });
+                    res.render('routeList', { routeList });
                 }
             });
         }
