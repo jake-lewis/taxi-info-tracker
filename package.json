@@ -38,8 +38,6 @@
     "devDependencies": {
         "mocha": "^4.0.1",
         "chai": "^4.1.2",
-        "chai-http": "^3.0.0",
-        "mocha-phantomjs": "^4.1.0",
-        "phantomjs-prebuilt": "^2.1.16"
+        "chai-http": "^3.0.0"
     }
 }
