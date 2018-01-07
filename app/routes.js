@@ -65,6 +65,7 @@ module.exports = function(app, passport) {
                 }
             });
         } else {
+            //Render list of routes for user, they can select which route to use
             routes.getRoutes(res.locals.user, function(err, routeList) {
                 if (err) {
                     res.status(500);

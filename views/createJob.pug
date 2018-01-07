@@ -1,9 +1,39 @@
 extends layout
 
 block content
-    ul(class="list-group")
-        for route in routeList
-            li(class="list-group-item") 
-                div Route ID: #{route.id}
-                div Origin: #{route.origin} 
-                div Destination: #{route.destination}
+    -var route = routeList[0];
+    -var origin = route.origin;
+    -var destination = route.destination;
+    -var today = new Date().toISOString();
+    -today = today.substring(0, today.length -8);
+
+    h1 Create Job
+
+    form(action="createJob", method="post")
+        div(class="row ")
+            div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
+                input(class="form-control" type="text", name="origin" value=''+ origin)
+                div(class="input-group-append")
+                    span(class="input-group-text") Origin
+        div(class="row ")
+            div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
+                input(class="form-control" type="text", name="destination" value=''+ destination)
+                div(class="input-group-append")
+                    span(class="input-group-text") Destination
+        div(class="row ")
+            div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
+                input(class="form-control" type="datetime-local", name="datetime-start", value=''+ today, min-width="170")
+                div(class="input-group-append")
+                    span(class="input-group-text") Start Date & Time
+        div(class="row ")
+            div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
+                input(class="form-control" type="datetime-local", name="datetime-finish" value='')
+                div(class="input-group-append")
+                    span(class="input-group-text") End Date & Time
+        div(class="row ")
+            div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
+                div(class="input-group-prepend")
+                    span(class="input-group-text") £
+                input(type="number" value="0.00" min="0.00" step="1.00" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency")/ 
+                div(class="input-group-append")
+                    span(class="input-group-text") Fare
