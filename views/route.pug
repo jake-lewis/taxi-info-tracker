@@ -11,7 +11,9 @@ block content
                 div(class='form-group')
                     label Destination
                     input(type='text' class='form-control' id='destination')
-                button(type='submit' class='btn btn-secondary btn-lg') Test Route
+                div(class="btn-group" role="group")
+                    button(type='submit' class='btn btn-secondary') Calculate Route
+                    button(id="save" onclick='saveRoute()' class='btn btn-dark' disabled) Save Route
     div(class='row')
         div(class='col-sm-12')
             div(id='map_container')    
