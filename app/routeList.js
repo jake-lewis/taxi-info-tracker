@@ -2,7 +2,13 @@ var dbConnection = require('./models/dbConnection');
 
 var debug = require('debug')('routeList');
 
-var getRoutes = function(user, done) {
+var getRoutes = function(user, routeId, done) {
+
+    //If no route specified
+    if (done == null) {
+        done = routeId;
+        routeId = null;
+    }
 
     debug('Called get routes');
 
@@ -14,16 +20,19 @@ var getRoutes = function(user, done) {
         //TODO Remove test code
         if (connection.state === "authenticated") {
             debug('Connection valid');
-            done(null, [{ "test": "Successful test" }]);
+
+            var userId = user.id;
+            var routeCondition = routeId ? 'id = ' + routeId + ' AND' : '';
+            var routeQuery = 'SELECT * FROM routes WHERE ' + routeCondition + ' userId = ' + userId;
+
+            connection.query(routeQuery, function(err, rows) {
+                done(err, rows);
+            });
+
         } else {
             debug('Connection in invalid state: ' + connection.state);
             done("connection is broken", null);
         }
-
-        // var userId = user.id;
-        // connection.query('SELECT * ROUTE WHERE userId = ' + userId, function(err, rows) {
-        //     done(err, rows);
-        // });
     };
 
     var reject = function(err) {
@@ -31,7 +40,7 @@ var getRoutes = function(user, done) {
         console.error(err);
     }
 
-    connection.then(resolve, reject)
+    connection.then(resolve, reject);
 };
 
 var routeList = { getRoutes: getRoutes };

@@ -1,10 +1,11 @@
-var map = require('./map');
 var routes = require('./routeList');
+var routeFactory = require('./models/routeFactory');
 var googleApiKeys = require('../config/googleAPI');
 
 module.exports = function(app, passport) {
 
     app.get('/*', function(req, res, next) {
+        res.set('X-Clacks-Overhead', 'GNU Terry Pratchett')
         res.locals.user = req.user;
         next();
     });
@@ -20,40 +21,60 @@ module.exports = function(app, passport) {
     });
 
     app.get('/route', isLoggedIn, function(req, res) {
-        res.render('route');
+        res.render('route', {javascriptMapKey: googleApiKeys.javascriptMap});
+    });
+
+    app.post('/route', function(req, res) {
+        var route = routeFactory.create(req.body);
+        
+        var userId = req.user.id;
+
+        routeFactory.store(userId, route, function(err, result) {
+            if (err) { 
+                console.error(err);
+                return;
+            }
+
+            route.id = result.insertId;
+            route.userId = userId;
+        });
+
+        res.status(200);
     });
 
     app.get('/routeList', isLoggedIn, function(req, res) {
         routes.getRoutes(res.locals.user, function(err, routeList) {
             if (err) {
-                console.error(err);
+                res.status(500);
+                res.render('error', err);
             } else {
                 res.render('routeList', { routeList });
             }
         });
     });
 
-    //Map API test
-    app.post('/route', function(req, res) {
-
-        var query = {
-            origin: req.body.origin,
-            destination: req.body.destination,
-            mode: 'driving'
+    app.get('/createJob', isLoggedIn, function(req, res, next) {
+        if (req.query.routeId) {
+            //Create job from specific route
+            routes.getRoutes(res.locals.user, req.query.routeId, function(err, routeList) {
+                if (err) {
+                    res.status(500);
+                    res.redirect('error', err);
+                } else {
+                    res.render('createJob', { routeList });
+                }
+            });
+        } else {
+            //Render list of routes for user, they can select which route to use
+            routes.getRoutes(res.locals.user, function(err, routeList) {
+                if (err) {
+                    res.status(500);
+                    res.redirect('error', err);
+                } else {
+                    res.render('routeList', { routeList });
+                }
+            });
         }
-
-        var route;
-
-        map.getRoute(query, function(err, response) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-
-            console.log(response.json);
-
-            res.render('route', { user: req.user, route: response, key: googleApiKeys.mapWebService });
-        }, googleApiKeys.javascriptMap);
     });
 
     app.get('/login', function(req, res) {
@@ -74,6 +95,11 @@ module.exports = function(app, passport) {
 
                 //prevent password hash from being sent to client
                 delete req.user.password;
+
+                //TODO IF has origin url, render that instead
+                if(req.session.originalUrl) {
+                    return res.redirect(req.session.originalUrl);
+                }
 
                 //res.redirect('profile');
                 return res.render('profile', { user: req.user });
@@ -110,6 +136,9 @@ module.exports = function(app, passport) {
         // if user is authenticated in the session, carry on 
         if (req.isAuthenticated())
             return next();
+
+        //record origin ID
+        req.session.originalUrl = req.originalUrl;
 
         // if they aren't redirect them to the home page
         res.render('login', { message: 'You must be logged in to view this page.' });
