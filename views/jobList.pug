@@ -1,0 +1,16 @@
+extends layout
+
+block content
+    ul(class="list-group")
+        for job in jobList
+            - var jobId = job.id;
+            li(class="list-group-item")
+                div Job ID: #{job.id}
+                div Origin: #{job.origin}
+                div Destination: #{job.destination}
+                div Start: #{job.start}
+                div Finish: #{job.finish}
+                div Fare: £#{job.fare}
+                form(action="jobDetails", method="get")
+                    input(type="hidden" name="jobId" value= + jobId)
+                    button(class="badge badge-secondary" type="submit") View Job

@@ -27,9 +27,11 @@ var factory = {
 
     store: function(userId, route, done) {
         if (!userId) {
+            debugStore('ERROR: User ID cannot be null');
             done('UserID cannot be null', null);
         } else {
-            var insertQuery = 'INSERT INTO routes (userId, origin, destination) values (' + userId + ',"' + route.origin + '","' + route.destination + '")';
+            var insertQuery = 'INSERT INTO routes (userId, origin, destination) ' +
+                'values (' + userId + ',"' + route.origin + '","' + route.destination + '")';
 
             var connection = dbConnection.getConnection();
             var resolve = function(connection) {
