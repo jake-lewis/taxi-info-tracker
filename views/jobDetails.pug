@@ -7,12 +7,12 @@ block content
 
     div(class="row ")
         div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
-            label(class="form-control") #{job.origin}
+            label(class="form-control" id="origin") #{job.origin}
             div(class="input-group-append")
                 span(class="input-group-text") Origin
     div(class="row ")
         div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
-            label(class="form-control") #{job.destination}
+            label(class="form-control" id="destination") #{job.destination}
             div(class="input-group-append")
                 span(class="input-group-text") Destination
     div(class="row ")
@@ -32,3 +32,15 @@ block content
             label(class="form-control") #{job.fare}
             div(class="input-group-append")
                 span(class="input-group-text") Fare
+    div(class="row")
+        div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 btn-group mb-3" role="group")
+            button(id="showMap" class='btn btn-secondary' onclick='renderMap()') Show Route
+            button(id="hideMap" class='btn btn-secondary' onclick='hideMap()' disabled) Hide Route
+    div(class='row')
+        div(class='col-sm-12')
+            div(id='map_container')
+                div(id='map' class="detailsMap")
+    
+    script(src="javascripts/map.js")
+    script(src="javascripts/jobDetails.js")
+    script(src="https://maps.googleapis.com/maps/api/js?key=" + javascriptMapKey async defer)

@@ -39,8 +39,8 @@ function handleLocationError(browserHasGeolocation) {
 function calcRoute() {
     
   var directionsService = new google.maps.DirectionsService();
-  var start = document.getElementById('origin').value;
-  var end = document.getElementById('destination').value;
+  var start = document.getElementById('origin').value || document.getElementById('origin').innerHTML;
+  var end = document.getElementById('destination').value || document.getElementById('destination').innerHTML;
   var request = {
     origin: start,
     destination: end,
@@ -49,10 +49,14 @@ function calcRoute() {
   };
   directionsService.route(request, function(result, status) {
     if (status == 'OK') {
-      document.getElementById('save').disabled = false;
+      if (document.getElementById('save')) {
+        document.getElementById('save').disabled = false;
+      }
       directionsDisplay.setDirections(result);
     } else {
-      document.getElementById('save').disabled = true;
+      if (document.getElementById('save')) {
+        document.getElementById('save').disabled = true;
+      }
     }
   });  
 }

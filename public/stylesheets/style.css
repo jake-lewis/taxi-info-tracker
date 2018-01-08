@@ -21,6 +21,10 @@ body,
     height: calc(100vh - 25rem);
 }
 
+#map.detailsMap {
+    height: calc(100vh - 34rem);
+}
+
 .btn-menu {
     background-color: #343a40!important;
     color: #868e96;

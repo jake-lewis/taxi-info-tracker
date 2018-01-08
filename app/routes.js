@@ -2,6 +2,7 @@ var routeList = require('./routeList');
 var jobList = require('./jobList');
 var routeFactory = require('./models/routeFactory');
 var jobFactory = require('./models/jobFactory');
+var statsController = require('./statistics');
 var googleApiKeys = require('../config/googleAPI');
 
 module.exports = function(app, passport) {
@@ -115,7 +116,7 @@ module.exports = function(app, passport) {
                     res.status(500);
                     res.redirect('error', err);
                 } else {
-                    res.render('jobDetails', { jobList });
+                    res.render('jobDetails', { jobList: jobList, javascriptMapKey: googleApiKeys.javascriptMap});
                 }
             });
         } else {
@@ -128,6 +129,22 @@ module.exports = function(app, passport) {
                     res.render('jobList', { jobList });
                 }
             });
+        }
+    });
+
+    app.get('/jobStatistics', isLoggedIn, function(req, res) {
+
+        if (req.query.start && req.query.end) {
+
+            statsController.getFares(req.user.id, req.query.start, req.query.end, function(err, result) {
+                if (err) {
+                    res.render('error', err);
+                } else {
+                    res.render('jobStatistics', {data: result});
+                }
+            });
+        } else {
+            res.render('jobStatistics')
         }
     });
 

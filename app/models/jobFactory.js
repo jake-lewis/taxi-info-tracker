@@ -26,7 +26,7 @@ var factory = {
         } else {
             var insertQuery = 'INSERT INTO jobs (userId, username, origin, destination, start, finish, fare)' +
                 'values (' + userId + ',"' + job.username + '","' + job.origin + '","' + job.destination +
-                    '","' + job.start.replace('T', ' ') + '","' + job.start.replace('T', ' ') + '",' + job.fare + ')';
+                    '","' + job.start.replace('T', ' ') + '","' + job.finish.replace('T', ' ') + '",' + job.fare + ')';
 
             var connection = dbConnection.getConnection();
             var resolve = function(connection) {

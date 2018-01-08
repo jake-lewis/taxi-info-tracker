@@ -1,0 +1,34 @@
+extends layout
+
+block content
+
+    script.
+        var data = !{JSON.stringify(data)};
+    -var today = new Date().toISOString();
+    -today = today.substring(0, today.length -14);
+
+    h1 Job Statistics
+
+    form(action="jobStatistics", method="get")
+        div(class="row ")
+                div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
+                    input(class="form-control" type="date", name="start", value='', min-width="170" required)
+                    div(class="input-group-append")
+                        span(class="input-group-text") Start Date
+        div(class="row ")
+            div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 input-group mb-3")
+                input(class="form-control" type="date", name="end" value=''+ today required)
+                div(class="input-group-append")
+                    span(class="input-group-text") End Date
+        div(class="row")
+            div(class="col-xs-12 col-sm-10 col-md-8 col-xl-6 btn-group mb-3")
+                button(type='submit' class='btn btn-secondary btn-block') Select Dates
+                button(class='btn btn-secondary btn-block' onclick='initChart()') Show Graph
+
+    if data
+        div(class='row')
+                div(class='col-sm-12')        
+                    div(id="calendar_basic" style="width: 1000px; height: 500px;")
+
+    script(type="text/javascript" src="https://www.gstatic.com/charts/loader.js")
+    script(src="javascripts/detailsChart.js")

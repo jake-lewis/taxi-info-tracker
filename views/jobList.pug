@@ -1,6 +1,9 @@
 extends layout
 
 block content
+
+    h1 Job Details
+
     ul(class="list-group")
         for job in jobList
             - var jobId = job.id;
