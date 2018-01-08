@@ -1,4 +1,5 @@
-var routes = require('./routeList');
+var routeList = require('./routeList');
+var jobList = require('./jobList');
 var routeFactory = require('./models/routeFactory');
 var jobFactory = require('./models/jobFactory');
 var googleApiKeys = require('../config/googleAPI');
@@ -27,24 +28,23 @@ module.exports = function(app, passport) {
 
     app.post('/route', function(req, res) {
         var route = routeFactory.create(req.body);
-        
         var userId = req.user.id;
 
         routeFactory.store(userId, route, function(err, result) {
             if (err) { 
-                console.error(err);
-                return;
+                console.log(err);
+                res.render('error', err);
             }
 
             route.id = result.insertId;
             route.userId = userId;
         });
 
-        res.status(200);
+        res.end();
     });
 
     app.get('/routeList', isLoggedIn, function(req, res) {
-        routes.getRoutes(res.locals.user, function(err, routeList) {
+        routeList.getRoutes(res.locals.user, function(err, routeList) {
             if (err) {
                 res.status(500);
                 res.render('error', err);
@@ -57,7 +57,7 @@ module.exports = function(app, passport) {
     app.get('/createJob', isLoggedIn, function(req, res, next) {
         if (req.query.routeId) {
             //Create job from specific route
-            routes.getRoutes(res.locals.user, req.query.routeId, function(err, routeList) {
+            routeList.getRoutes(res.locals.user, req.query.routeId, function(err, routeList) {
                 if (err) {
                     res.status(500);
                     res.redirect('error', err);
@@ -67,7 +67,7 @@ module.exports = function(app, passport) {
             });
         } else {
             //Render list of routes for user, they can select which route to use
-            routes.getRoutes(res.locals.user, function(err, routeList) {
+            routeList.getRoutes(res.locals.user, function(err, routeList) {
                 if (err) {
                     res.status(500);
                     res.redirect('error', err);
@@ -80,8 +80,55 @@ module.exports = function(app, passport) {
 
     app.post('/createJob', isLoggedIn, function(req, res, next) {
         var job = jobFactory.create(req.user, req.body);
-        console.log(job);
-        res.send('Done');
+        var userId = req.user.id;
+        
+        jobFactory.store(userId, job, function(err, result) {
+            if (err) { 
+                console.error(err);
+                return;
+            }
+
+            job.id = result.insertId;
+            job.userId = userId;
+            res.redirect('jobList');
+        });
+        
+        //TODO render job list?
+    });
+
+    app.get('/jobList', isLoggedIn, function(req, res) {
+        jobList.getJobs(res.locals.user, function(err, jobList) {
+            if (err) {
+                res.status(500);
+                res.render('error', err);
+            } else {
+                res.render('jobList', { jobList });
+            }
+        });
+    });
+
+    app.get('/jobDetails', isLoggedIn, function(req, res) {
+        if (req.query.jobId) {
+            //View details for a specific job
+            jobList.getJobs(res.locals.user, req.query.jobId, function(err, jobList) {
+                if (err) {
+                    res.status(500);
+                    res.redirect('error', err);
+                } else {
+                    res.render('jobDetails', { jobList });
+                }
+            });
+        } else {
+            //Render list of jobs for user, they can select which job to use
+            jobList.getJobs(res.locals.user, function(err, jobList) {
+                if (err) {
+                    res.status(500);
+                    res.redirect('error', err);
+                } else {
+                    res.render('jobList', { jobList });
+                }
+            });
+        }
     });
 
     app.get('/login', function(req, res) {
