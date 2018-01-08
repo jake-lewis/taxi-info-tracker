@@ -115,7 +115,7 @@ module.exports = function(app, passport) {
                     res.status(500);
                     res.redirect('error', err);
                 } else {
-                    res.render('jobDetails', { jobList });
+                    res.render('jobDetails', { jobList: jobList, javascriptMapKey: googleApiKeys.javascriptMap});
                 }
             });
         } else {
