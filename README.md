@@ -2,8 +2,12 @@
 
 builds from jenkins
 
-to start PROD, run `pm2 start npm -- start -- watch`
+To run: npm start
 
-to start DEV, TEST, set port i.e. sudo env PORT=3001 ...
+To enable debugging output: DEBUG=<pick things here e.g. * OR connection:init OR connection:*> npm start
 
-^^ outdated
+To run tests: npm test
+
+To debug in Node: Use run configuration "Launch via NPM" in launch.json from within Visual Studio Code
+
+To debug Unit test in node: Use run configuration "Mocha Tests" in launch.json from within Visual Studio Code
